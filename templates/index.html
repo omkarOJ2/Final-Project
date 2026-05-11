@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Newsroom - Dashboard</title>
+    <meta name="description" content="AI Newsroom: Generate AP Style articles, detect fake news, check editorial standards, and track live trending news — all powered by Groq LLaMA 3.3 70B.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='85'>📰</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-newspaper"></i> AI Newsroom
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/generator">Generator</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/detector">Detector</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/checker">Checker</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/trending">Trending</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <div class="hero-badge"><i class="fas fa-bolt"></i> Powered by Groq LLaMA 3.3 70B</div>
+            <h1>Your <span>AI-Powered</span><br>Newsroom</h1>
+            <p>Generate professional articles, detect misinformation, check editorial standards, and track live trends — all in one platform.</p>
+            <div class="hero-actions">
+                <a href="/generator" class="btn-hero-primary"><i class="fas fa-pen-fancy"></i> Start Writing</a>
+                <a href="/trending" class="btn-hero-secondary"><i class="fas fa-chart-line"></i> Live Trends</a>
+            </div>
+        </div>
+
+
+
+        <!-- Feature Cards -->
+        <div class="row g-4 mb-5">
+            <!-- Article Generator -->
+            <div class="col-md-6 col-lg-3">
+                <a href="/generator" class="card feature-card feature-generator" style="text-decoration:none;display:block">
+                    <div class="card-body" style="text-align:center;padding:36px 20px">
+                        <div class="feature-icon-wrap mx-auto mb-3"><i class="fas fa-pen-fancy"></i></div>
+                        <h3 style="font-weight:700;margin-bottom:10px">Article Generator</h3>
+                        <p>Generate AP Style articles grounded in live Google News sources.</p>
+                        <div class="feature-tags mt-3"><span>AP Style</span><span>Live Sources</span><span>PDF</span></div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Fake News Detector -->
+            <div class="col-md-6 col-lg-3">
+                <a href="/detector" class="card feature-card feature-detector" style="text-decoration:none;display:block">
+                    <div class="card-body" style="text-align:center;padding:36px 20px">
+                        <div class="feature-icon-wrap mx-auto mb-3"><i class="fas fa-shield-alt"></i></div>
+                        <h3 style="font-weight:700;margin-bottom:10px">Fake News Detector</h3>
+                        <p>AI claim-by-claim fact verification with confidence scoring.</p>
+                        <div class="feature-tags mt-3"><span>Fact Check</span><span>Score</span><span>Claims</span></div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Format Checker -->
+            <div class="col-md-6 col-lg-3">
+                <a href="/checker" class="card feature-card feature-checker" style="text-decoration:none;display:block">
+                    <div class="card-body" style="text-align:center;padding:36px 20px">
+                        <div class="feature-icon-wrap mx-auto mb-3"><i class="fas fa-check-circle"></i></div>
+                        <h3 style="font-weight:700;margin-bottom:10px">Format Checker</h3>
+                        <p>Editorial scoring against AP Style and professional journalism standards.</p>
+                        <div class="feature-tags mt-3"><span>AP Style</span><span>Score</span><span>Edits</span></div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Trending News -->
+            <div class="col-md-6 col-lg-3">
+                <a href="/trending" class="card feature-card feature-trending" style="text-decoration:none;display:block">
+                    <div class="card-body" style="text-align:center;padding:36px 20px">
+                        <div class="feature-icon-wrap mx-auto mb-3"><i class="fas fa-chart-line"></i></div>
+                        <h3 style="font-weight:700;margin-bottom:10px">Trending News</h3>
+                        <p>Live top headlines by region and category from NewsAPI + Google News.</p>
+                        <div class="feature-tags mt-3"><span>Real-time</span><span>10 Regions</span><span>7 Categories</span></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- About Section -->
+        <div class="about-section">
+            <div class="text-center mb-5">
+                <h2>Powered by <span class="section-title">Groq LLaMA 3.3 70B</span></h2>
+                <p class="lead">
+                    AI Newsroom uses Groq's ultra-fast LLaMA 3.3 70B to help journalists, content creators,
+                    and researchers create, verify, and improve news content with real-time source grounding.
+                </p>
+            </div>
+            
+            <div class="row mt-5">
+                <div class="col-md-4 mb-4">
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <h5>Fast & Efficient</h5>
+                        <p>Generate and analyze content in seconds</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h5>AI-Powered</h5>
+                        <p>Leveraging cutting-edge AI technology</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <h5>Reliable</h5>
+                        <p>Accurate verification and analysis</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Theme Toggle Button (Added by JavaScript) -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

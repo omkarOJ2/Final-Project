@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Format Checker - AI Newsroom</title>
+    <meta name="description" content="Check your news article against AP Style editorial standards. Get an AI-powered score, structure breakdown, strengths, and actionable improvements.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='85'>📰</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-newspaper"></i> AI Newsroom
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/generator">Generator</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/detector">Detector</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/checker">Checker</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/trending">Trending</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-check-circle"></i> Article Format Checker
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-4" style="color: var(--txt2);">
+                            Get professional feedback on your article's structure, format, and quality. 
+                            Receive actionable suggestions to improve your writing.
+                        </p>
+
+                        <!-- Checker Form -->
+                        <div class="mb-4">
+                            <label for="articleText" class="form-label">
+                                <i class="fas fa-file-alt"></i> Article Text *
+                            </label>
+                            <textarea class="form-control" id="articleText" rows="10" 
+                                      placeholder="Paste your article here for format and quality analysis..."></textarea>
+                            <div class="form-text">
+                                Include the complete article with headline for comprehensive analysis
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary btn-lg w-100" id="checkBtn" onclick="checkFormat()">
+                            <i class="fas fa-check-double"></i> Check Format & Quality
+                        </button>
+
+                        <!-- Result Container -->
+                        <div id="feedbackResult" class="mt-4"></div>
+                    </div>
+                </div>
+
+                <!-- What We Check Card -->
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h5><i class="fas fa-clipboard-check"></i> What We Analyze</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul>
+                                    <li><strong>Structure:</strong> Headline, intro, body, conclusion</li>
+                                    <li><strong>Grammar:</strong> Spelling and grammatical errors</li>
+                                    <li><strong>Style:</strong> Consistency and tone</li>
+                                    <li><strong>Readability:</strong> Sentence complexity</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul>
+                                    <li><strong>Format:</strong> Journalistic standards</li>
+                                    <li><strong>Flow:</strong> Logical progression</li>
+                                    <li><strong>Engagement:</strong> Reader interest</li>
+                                    <li><strong>Clarity:</strong> Message effectiveness</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tips Card -->
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h5><i class="fas fa-lightbulb"></i> Writing Tips</h5>
+                        <ul class="mb-0">
+                            <li>Start with a strong, attention-grabbing headline</li>
+                            <li>Use the inverted pyramid structure (most important first)</li>
+                            <li>Keep paragraphs short and focused (3-4 sentences)</li>
+                            <li>Use active voice and strong verbs</li>
+                            <li>Include quotes for credibility and human interest</li>
+                            <li>End with a strong conclusion or call-to-action</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

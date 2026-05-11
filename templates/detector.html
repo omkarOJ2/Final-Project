@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fake News Detector - AI Newsroom</title>
+    <meta name="description" content="Detect fake news and verify article authenticity with AI. Claim-by-claim fact checking with confidence scoring powered by Groq LLaMA 3.3 70B and live news cross-referencing.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='85'>📰</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-newspaper"></i> AI Newsroom
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/generator">Generator</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/detector">Detector</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/checker">Checker</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/trending">Trending</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-shield-alt"></i> Fake News Detector
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-4" style="color: var(--txt2);">
+                            Verify the authenticity of news by analyzing content against current events 
+                            and fact-checking databases. Paste any news text to check if it's real or fake.
+                        </p>
+
+                        <!-- Detection Form -->
+                        <div class="mb-4">
+                            <label for="newsText" class="form-label">
+                                <i class="fas fa-paste"></i> News Text to Verify *
+                            </label>
+                            <textarea class="form-control" id="newsText" rows="8" 
+                                      placeholder="Paste the news article or claim you want to verify here..."></textarea>
+                            <div class="form-text">
+                                Paste the complete news text for better analysis results
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary btn-lg w-100" id="detectBtn" onclick="detectFakeNews()">
+                            <i class="fas fa-search"></i> Analyze News
+                        </button>
+
+                        <!-- Result Container -->
+                        <div id="detectionResult" class="mt-4"></div>
+                    </div>
+                </div>
+
+                <!-- How It Works Card -->
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h5><i class="fas fa-question-circle"></i> How It Works</h5>
+                        <p class="mb-2">Our AI analyzes news content through multiple factors:</p>
+                        <ul class="mb-0">
+                            <li><strong>Source Credibility:</strong> Checks if the source is known and reliable</li>
+                            <li><strong>Content Analysis:</strong> Analyzes language patterns and claims</li>
+                            <li><strong>Fact Cross-Reference:</strong> Compares with current verified news</li>
+                            <li><strong>Red Flag Detection:</strong> Identifies suspicious elements in the text</li>
+                            <li><strong>Verification Tips:</strong> Provides steps to manually verify the news</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Warning Card -->
+                <div class="card mt-4 border-warning">
+                    <div class="card-body">
+                        <h5 class="text-warning"><i class="fas fa-exclamation-triangle"></i> Important Note</h5>
+                        <p class="mb-0">
+                            This tool provides AI-assisted analysis and should be used as a guide. 
+                            Always verify important news through multiple trusted sources before sharing.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
