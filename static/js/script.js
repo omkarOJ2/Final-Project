@@ -413,9 +413,9 @@ function displayNews(news) {
                 <div class="d-flex flex-wrap align-items-center gap-2">
                     <span class="news-badge ${badgeClass}">${item.importance || 'Medium'}</span>
                     <span class="news-badge" style="background:rgba(245,158,11,.15);color:var(--amb);border:1px solid rgba(245,158,11,.3)">${item.category}</span>
-                    ${item.source ? `<span class="text-muted" style="font-size:.8rem"><i class="fas fa-newspaper"></i> ${item.source}</span>` : ''}
-                    ${timeStr ? `<span class="text-muted" style="font-size:.8rem"><i class="far fa-clock"></i> ${timeStr}</span>` : ''}
-                    <a href="${item.url}" target="_blank" rel="noopener" class="ms-auto text-muted" style="font-size:.8rem;text-decoration:none">
+                    ${item.source ? `<span class="news-meta-info"><i class="fas fa-newspaper"></i> ${item.source}</span>` : ''}
+                    ${timeStr ? `<span class="news-meta-info"><i class="far fa-clock"></i> ${timeStr}</span>` : ''}
+                    <a href="${item.url}" target="_blank" rel="noopener" class="ms-auto news-meta-info" style="text-decoration:none">
                         Read <i class="fas fa-external-link-alt"></i>
                     </a>
                     <a href="/generator?topic=${topicParam}" class="news-write-btn">

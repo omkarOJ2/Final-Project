@@ -189,6 +189,7 @@ textarea.form-control{min-height:140px;resize:vertical}
 .badge-low{background:rgba(16,185,129,.15);color:var(--green);border:1px solid rgba(16,185,129,.3)}
 .news-write-btn{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;padding:5px 12px;border-radius:8px;font-size:.78rem;font-weight:600;text-decoration:none;transition:all .2s;margin-left:8px}
 .news-write-btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(99,102,241,.4);color:#fff}
+.news-meta-info{font-size:.8rem;color:var(--txt2);display:inline-flex;align-items:center;gap:4px}
 
 /* ── Alerts */
 .alert{border:none;border-radius:12px;padding:14px 18px;border-left:4px solid}
