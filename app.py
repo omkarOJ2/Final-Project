@@ -193,9 +193,15 @@ def post_process_article(raw: str) -> str:
         r'([A-Z][A-Za-z](?:[A-Za-z\s]{0,30}?))\s+'
         r'(reported|noted|stated|claimed|revealed|indicated)\b',
     )
+    # Pattern: "as reported by X" → "according to X"
+    _AS_REPORTED_RE = re.compile(
+        r'\bas\s+reported\s+by\b',
+        re.IGNORECASE,
+    )
     processed = []
     for line in lines:
         line = _ATTRIB_RE.sub(lambda m2: m2.group(1) + ' said', line)
+        line = _AS_REPORTED_RE.sub('according to', line)
         processed.append(line)
     lines = processed
 
@@ -283,7 +289,7 @@ def generate_article():
         if len(topic) > 500:
             return jsonify({'success': False, 'error': 'Topic too long (max 500 chars).'}), 400
 
-        # Real-time Google News search — keep context small to stay within TPM limits
+        # Real-time Google News search
         search_ctx,  sources1 = gnews_search(f"{topic} latest news", max_results=3)
         search_ctx2, sources2 = gnews_search(f"{topic} update {datetime.now().year}", max_results=2)
         combined_ctx = search_ctx + "\n\n" + search_ctx2
@@ -293,88 +299,86 @@ def generate_article():
                 seen.add(s['url'])
                 unique_sources.append(s)
 
-        today     = datetime.now().strftime("%B %d, %Y")
+        today = datetime.now().strftime("%B %d, %Y")
 
-        # Detect likely dateline city from topic keywords
-        topic_lower = topic.lower()
-        if any(k in topic_lower for k in ['chennai', 'tamil', 'vijay', 'tamilnadu', 'tn ']):
-            dateline_city = "CHENNAI"
-        elif any(k in topic_lower for k in ['mumbai', 'maharashtra', 'bombay']):
-            dateline_city = "MUMBAI"
-        elif any(k in topic_lower for k in ['bengaluru', 'bangalore', 'karnataka']):
-            dateline_city = "BENGALURU"
-        elif any(k in topic_lower for k in ['kolkata', 'bengal', 'west bengal']):
-            dateline_city = "KOLKATA"
-        elif any(k in topic_lower for k in ['hyderabad', 'telangana', 'andhra']):
-            dateline_city = "HYDERABAD"
-        elif any(k in topic_lower for k in ['india', 'delhi', 'modi', 'bjp', 'congress', 'parliament']):
-            dateline_city = "NEW DELHI"
-        elif any(k in topic_lower for k in ['pakistan', 'islamabad']):
-            dateline_city = "ISLAMABAD"
-        elif any(k in topic_lower for k in ['us ', 'usa', 'trump', 'biden', 'washington', 'america']):
-            dateline_city = "WASHINGTON"
-        elif any(k in topic_lower for k in ['uk', 'london', 'britain', 'england']):
-            dateline_city = "LONDON"
-        else:
-            dateline_city = "NEW DELHI"
+        system = """You are a senior AP wire journalist. Write professional, publication-ready news articles following AP Style exactly. Study the MODEL ARTICLE below — your output must match this quality and structure.
 
-        system = """You are a senior AP wire journalist. Every article you write must pass a rigorous AP Style editorial check. Study the FORMAT EXAMPLE below — your output must follow it exactly.
+=== MODEL ARTICLE (follow this structure exactly) ===
 
-=== FORMAT EXAMPLE (follow this structure precisely) ===
+WHO Declares Global Health Emergency Over Viral Outbreak
 
-Vijay Sworn In as Tamil Nadu Chief Minister
+GENEVA, May 12, 2026 — The World Health Organization declared an international public health emergency on Monday after a fast-spreading respiratory virus infected more than 10,000 people across 23 countries in three weeks.
 
-CHENNAI, May 12, 2026 — Actor-turned-politician Vijay took oath as Tamil Nadu's Chief Minister on Monday, becoming the first TVK leader to hold the post after his party's landslide victory last week.
+The virus, first detected in Southeast Asia last month, prompted travel advisories from the United States, the European Union, and Australia. Health officials said containment efforts were already under way in 15 nations.
 
-The swearing-in ceremony at Raj Bhavan saw Vijay flanked by Cabinet ministers drawn from diverse backgrounds, according to The Hindu. Kamal Haasan, who attended the ceremony, said, "Vijay's win is a significant moment for Tamil Nadu."
+"We are treating this with the utmost urgency," WHO Director-General Tedros Adhanom Ghebreyesus said at a press conference in Geneva. The organization dispatched emergency response teams to the five most affected countries.
 
-Vijay's election affidavit declared ₹1.2 crore in gold assets, while his wife Sangeetha declared gold worth ₹4.07 crore, The Hindu said.
+Scientists at the US Centers for Disease Control and Prevention said the virus spreads primarily through respiratory droplets and close contact. A vaccine candidate could enter clinical trials within six months, the CDC said.
 
-Vijay's first Cabinet includes a doctor, a former IRS officer, and a 29-year-old MLA, Business Today said. The New Indian Express noted the new government faces pressure to deliver on poll promises of free bus travel and farm loan waivers.
+The declaration unlocks $50 million in emergency funding and activates the International Health Regulations, obligating all 194 member states to report new cases within 24 hours, according to WHO.
 
-Zoho founder Sridhar Vembu said, "Grassroots chatter beat the experts in Tamil Nadu, and Vijay's win is a testament to that."
+=== END MODEL ARTICLE ===
 
-=== END EXAMPLE ===
+WHY THIS ARTICLE SCORES HIGH — apply these lessons:
 
-RULES (non-negotiable):
+HEADLINE: "WHO Declares Global Health Emergency Over Viral Outbreak"
+- Title Case. Active verb (Declares). States the KEY OUTCOME. 8 words. No period.
+- Never write a vague event name like "Health Situation Update" or "News About Virus".
 
-RULE 1 — HEADLINE: First line only. Title Case Every Major Word (prepositions and articles lowercase). Active verb. 6–10 words. No period. No quotation marks. Must be a COMPLETE, grammatically correct sentence fragment — never omit prepositions (e.g., write "Takes Oath of Office" NOT "Takes Oath Office").
+DATELINE CITY: "GENEVA"
+- Always the city where the event physically happened — not the national capital of an unrelated country.
+- State-level event → that state's capital city. International event → city where it occurred. National policy → capital.
 
-RULE 2 — DATELINE LINE: Second line. Blank line between headline and dateline. Format exactly: CITY IN CAPS, Month Day, Year — followed immediately by the lead sentence. Example: CHENNAI, May 12, 2026 — Actor-turned-politician Vijay...
+LEAD SENTENCE: "The World Health Organization declared...in three weeks."
+- Direct, confident statement of fact. NO "according to" or "said" in the lead.
+- Answers Who (WHO), What (declared emergency), When (Monday), Where (globally), Why (virus spread).
+- Specific numbers (10,000 people, 23 countries) make it credible.
 
-RULE 3 — LEAD SENTENCE: The lead is part of the dateline line, starting immediately after the em dash (—). It is NOT a separate line. MINIMUM 20 WORDS, MAXIMUM 35 WORDS. Must answer: WHO did WHAT, WHEN, WHERE, and WHY. The most newsworthy fact comes first. No scene-setting opener.
+BODY PARAGRAPHS:
+- Each paragraph adds completely NEW information — never repeat the same point.
+- Attribution is used sparingly: only for a direct quote and a specific scientific claim. Not on every sentence.
+- Paragraph without attribution is fine if it states established facts.
 
-RULE 4 — BODY PARAGRAPHS: Each is a separate paragraph with a blank line before it. Maximum 3 sentences per paragraph. Every factual claim must cite a named source using "said" or "according to [Source]". Never use: reported, noted, stated, claimed, added, revealed.
+CONCLUSION: Ends with a concrete statistic and a legal obligation — not vague filler.
 
-RULE 5 — NUMBERS: Use numerals for 10 and above. Spell out one through nine. Indian currency: always write as ₹1.2 crore or ₹4.07 crore (never "one point two crore" or "four point zero seven crore"). Ages always use numerals.
+STRICT RULES:
 
-RULE 6 — CONCLUSION: Final paragraph must end with a forward-looking quote, a statistic, or context about what happens next. NEVER write: "In conclusion", "To summarize", "In summary", "Overall", "It remains to be seen".
+1. HEADLINE — Title Case. Active verb. 6–10 words. No period. Must state the KEY OUTCOME.
 
-RULE 7 — LINE BREAKS: Headline on line 1. Blank line. Dateline+lead on line 3. Blank line. Body paragraphs each separated by blank lines. Do NOT merge headline and dateline onto the same line under any circumstances."""
+2. DATELINE — CITY IN CAPS where the event happened. Format: CITY, Month Day, Year —
+
+3. LEAD — 20–35 words. NO attribution. Confident statement answering Who/What/When/Where/Why.
+
+4. BODY — Inverted pyramid. Max 3 sentences per paragraph. Blank line between paragraphs.
+   Attribution ("said [Source]" / "according to [Source]") only for direct quotes and specific statistics.
+   Never use: reported, noted, stated, claimed, added, revealed, as reported by.
+   Do NOT fabricate quotes — only quote if the news context provides exact verbatim words.
+
+5. NUMBERS — 10+: numerals. 1–9: spelled out. Ages: numerals. Currency: $1.2 million, ₹4.07 crore.
+
+6. CONCLUSION — Must end with a real quote, specific statistic, or concrete next step. Never vague filler.
+   Never write: "In conclusion", "To summarize", "Overall", "It remains to be seen".
+
+7. OUTPUT — Write only the article. No preamble, no "Here is the article:", no commentary."""
 
         user = f"""Write a {nature} AP Style news article about: {topic}
-Target length: ~{word_limit} words | Date: {today}
+Target length: ~{word_limit} words | Today's date: {today}
 
-YOUR OUTPUT MUST FOLLOW THIS EXACT LINE STRUCTURE:
-Line 1:  [Headline — Title Case, Active Verb, 6-10 Complete Words, No Period, No Missing Prepositions]
-Line 2:  [blank]
-Line 3:  {dateline_city}, {today} — [Lead sentence: 20-35 words, WHO did WHAT WHEN WHERE WHY, starts immediately after the em dash]
-Line 4:  [blank]
-Line 5:  [Body paragraph 1 — most important fact, named source + "said" or "according to"]
-Line 6:  [blank]
-Line 7:  [Body paragraph 2 — second fact or direct quote, named source]
-Line 8:  [blank]
-Line 9:  [Body paragraph 3 — context or reaction, named source]
-Line 10: [blank]
-Line 11: [Final paragraph — forward-looking quote or statistic, NO "In conclusion"]
+Follow the MODEL ARTICLE structure:
+- Line 1:  Headline — Title Case, active verb, KEY OUTCOME stated, 6–10 words, no period
+- Line 2:  [blank]
+- Line 3:  CITY WHERE EVENT HAPPENED IN CAPS, {today} — Lead (20–35 words, direct fact, NO "according to" or "said")
+- Line 4:  [blank]
+- Body paragraphs: Each adds NEW information. Blank line between each. Attribution only for quotes and specific data.
+- Final:   Strong conclusion — specific quote from context, statistic, or concrete next step.
 
-LIVE NEWS CONTEXT (extract facts from here, cite these sources by name):
+LIVE NEWS CONTEXT — extract facts from here and cite these sources by name when attributing:
 {combined_ctx}
 
-Write only the article. No "Here is the article:", no commentary, no preamble."""
+Write only the article. No "Here is the article:", no commentary."""
 
         raw        = groq_chat(system, user, max_tokens=1400, model=GROQ_MODEL)
-        raw        = post_process_article(raw)          # ← deterministic AP Style fixes
+        raw        = post_process_article(raw)
         article    = markdown.markdown(raw, extensions=['tables', 'fenced_code'])
         word_count = len(raw.split())
         return jsonify({
@@ -385,8 +389,6 @@ Write only the article. No "Here is the article:", no commentary, no preamble.""
 
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
-
-
 
 
 @app.route('/api/detect-fake-news', methods=['POST'])
